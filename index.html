@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Walton Industrial IT</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+  <!-- Navbar -->
+  <nav class="flex justify-around items-center bg-green-400	 p-4 text-dark-400 text-center">
+    <img src="assets/walton.png" alt="" class="max-w-4 max-h-10">
+    <h1 class="text-3xl font-bold">Walton Industrial IT Dept.</h1>
+    <img src="assets/marcel.png" alt="" class="max-w-4 max-h-10">
+  </nav>
+
+  <!-- Main Container -->
+  <div class=" p-4">
+    <div class="flex space-x-4">
+      <!-- Sidebar -->
+      <div class="flex flex-col items-center bg-white shadow-md rounded-lg p-4 h-screen">
+        <img src="assets/iit.png" alt="" class="w-20">
+        <ul class="space-y-2">
+          <li><button id="dashboardButton" class="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600">Dashboard</button></li>
+          <li><button id="machinesButton" class="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600">Manage Machines</button></li>
+          <li><button id="ipManageButton" class="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600">IP Management</button></li>
+          <li><button id="maintenanceButton" class="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600">Preventive Maintenance Status</button></li>
+        </ul>
+      </div>
+
+      <!-- Content Area -->
+      <div class="w-full bg-white shadow-md rounded-lg p-6">
+        <!-- Dashboard View -->
+        <div id="dashboard" class="hidden">
+          <h2 class="text-2xl font-semibold mb-4">Dashboard</h2>
+          <p id="totalMachinesCount">Total Machines: 0</p>
+          <p id="totalIPCount">Total IPs: 0</p>
+          <p id="totalMaintenanceCount">Total Maintenance Records: 0</p>
+        </div>
+
+        <!-- Machine Management View -->
+        <div id="machines" class="hidden">
+          <h2 class="text-2xl font-semibold mb-4">Manage Machines</h2>
+          <input type="text" id="searchMachine" placeholder="Search machines..." class="border p-2 rounded mb-4 w-full">
+          <button onclick="openMachineModal()" class="mb-4 p-2 bg-green-500 text-white rounded">Add Machine</button>
+          <table class="w-full border-collapse">
+            <thead>
+              <tr>
+                <th class="border p-2">Tag/Serial</th>
+                <th class="border p-2">Image</th>
+                <th class="border p-2">Name</th>
+                <th class="border p-2">Type</th>
+                <th class="border p-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="machineTable"></tbody>
+          </table>
+        </div>
+
+        <!-- IP Management View -->
+        <div id="ipManage" class="hidden">
+          <h2 class="text-2xl font-semibold mb-4">IP Management</h2>
+          <input type="text" id="searchIP" placeholder="Search IPs..." class="border p-2 rounded mb-4 w-full">
+          <button onclick="openIPModal()" class="mb-4 p-2 bg-green-500 text-white rounded">Add IP</button>
+          <table class="w-full border-collapse">
+            <thead>
+              <tr>
+                <th class="border p-2">IP</th>
+                <th class="border p-2">Machine Name</th>
+                <th class="border p-2">Machine Tag</th>
+                <th class="border p-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="ipTable"></tbody>
+          </table>
+        </div>
+
+        <!-- Maintenance Management View -->
+        <div id="maintenanceManage" class="hidden">
+          <h2 class="text-2xl font-semibold mb-4">Maintenance Management</h2>
+          <input type="text" id="searchMaintenance" placeholder="Search maintenance..." class="border p-2 rounded mb-4 w-full">
+          <button onclick="openMaintenanceModal()" class="mb-4 p-2 bg-green-500 text-white rounded">Add Maintenance</button>
+          <table class="w-full border-collapse">
+            <thead>
+              <tr>
+                <th class="border p-2">Machine Name</th>
+                <th class="border p-2">Machine Tag</th>
+                <th class="border p-2">Maintenance Status</th>
+                <th class="border p-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="maintenanceTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Machine Modal -->
+  <div id="machineModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+    <div class="bg-white p-6 rounded-lg w-1/3">
+      <h3 class="text-xl font-semibold mb-4" id="modalTitle">Add Machine</h3>
+      <form id="machineForm">
+        <input type="text" id="machineTag" placeholder="Machine Tag/Serial" class="border p-2 rounded mb-4 w-full" required>
+        <input type="text" id="machineName" placeholder="Machine Name" class="border p-2 rounded mb-4 w-full" required>
+        <input type="text" id="machineType" placeholder="Machine Type" class="border p-2 rounded mb-4 w-full" required>
+        <input type="file" id="machineImage" class="border p-2 rounded mb-4 w-full" accept="image/*">
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
+        <button type="button" id="closeMachineModalButton" onclick="closeModal()" class="bg-red-500 text-white px-4 py-2 rounded">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- IP Modal -->
+  <div id="ipModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+    <div class="bg-white p-6 rounded-lg w-1/3">
+      <h3 class="text-xl font-semibold mb-4" id="ipModalTitle">Add IP</h3>
+      <form id="ipForm">
+        <input type="text" id="ipAddress" placeholder="IP Address" class="border p-2 rounded mb-4 w-full" required>
+        <input type="text" id="ipMachineName" placeholder="Machine Name" class="border p-2 rounded mb-4 w-full" required>
+        <input type="text" id="ipMachineTag" placeholder="Machine Tag" class="border p-2 rounded mb-4 w-full" required>
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
+        <button type="button" id="closeIPModalButton" onclick="closeModal()" class="bg-red-500 text-white px-4 py-2 rounded">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Maintenance Modal -->
+  <div id="maintenanceModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+    <div class="bg-white p-6 rounded-lg w-1/3">
+      <h3 class="text-xl font-semibold mb-4" id="maintenanceModalTitle">Add Maintenance</h3>
+      <form id="maintenanceForm">
+        <input type="text" id="maintenanceMachineName" placeholder="Machine Name" class="border p-2 rounded mb-4 w-full" required>
+        <input type="text" id="maintenanceMachineTag" placeholder="Machine Tag" class="border p-2 rounded mb-4 w-full" required>
+        <select id="maintenanceStatus" class="border p-2 rounded mb-4 w-full" required>
+          <option value="" disabled selected>Select Maintenance Status</option>
+          <option value="Pending">Pending</option>
+          <option value="Completed">Completed</option>
+          <option value="In Progress">In Progress</option>
+        </select>
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
+        <button type="button" id="closeMaintenanceModalButton" onclick="closeModal()" class="bg-red-500 text-white px-4 py-2 rounded">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="index.js"></script>
+</body>
+</html>
